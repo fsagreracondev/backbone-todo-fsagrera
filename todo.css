@@ -1,0 +1,132 @@
+html, body{
+    margin:0px;
+    padding:0px;
+}
+
+body{
+    font:14px Arial, sans-serif;
+    color:#eeeeee;
+    background:#1e1e1e;
+    width:520px;
+    margin:0 auto;
+    padding:0;
+    -webkit-font-smoothing: antialiased;
+}
+
+@font-face{
+    font-family: lobster;
+    src: url(Lobster.otf);
+}
+
+#todobody{
+    background:#eeeeee;
+    text-align:center;
+    margin:0px 0px 15px;
+    padding:20px;
+    -webkit-box-shadow:rgba(220, 220, 220, 0.1) 0 2px 2px 0;
+    -moz-box-shadow:rgba(220, 220, 220, 0.1) 0 2px 6px 0;
+    -ms-box-shadow:rgba(220, 220, 220, 0.1) 0 2px 6px 0;
+    -o-box-shadow:rgba(220, 220, 220, 0.1) 0 2px 6px 0;
+    box-shadow:rgba(220, 220, 220, 0.1) 0 2px 6px 0;
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -ms-border-radius: 0 0 5px 5px;
+    -o-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+}
+
+#todoheader{
+    font: 38px lobster;
+    color:#000000;
+    margin:10px auto;
+    text-align:center;
+}
+
+#todoadd{
+    width:460px;
+    font-size: 18px;
+    border:1px solid #ffffff;
+    padding:4px 8px;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -ms-border-radius:5px;
+    -o-border-radius:5px;
+    border-radius:5px;
+}
+
+.todoinstruction{
+    font-size: 10px;
+    font-style:italics;
+    color: #aaaaaa;
+    text-align:right;
+    padding:0px 15px;
+}
+
+/*#todoeditinstrunction{
+    display:none;
+}*/
+
+#todocontent{
+   /* display:none;*/
+    text-align: left;
+    color:#000000;
+}
+
+#todolist{
+    list-style-type: none;
+    padding: 10px 15px;
+}
+
+#todolist li{
+    color:#000000;
+}
+
+#todolist text{
+    display:none;
+}
+
+#tododone{
+    font-size:14px;
+    vertical-align:middle;
+}
+
+#todofooter{
+    background:#5A5A5A;
+    padding: 5px;
+    margin: 10px -20px -20px;
+}
+
+.todoremove{
+    background: url(images/remove.png) no-repeat;
+    opacity:0.5;
+    width:20px;
+    height:20px;
+    float:right;
+    vertical-align:middle;
+}
+.todoremove:hover{
+    opacity:1;
+    cursor:pointer;
+}
+
+#todorefresh{
+    background:rgba(0,0,0,0.4);
+    font-size:10px;
+    padding:2px 4px;
+    margin-right: 15px;
+    float:right;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    -ms-border-radius:5px;
+    -o-border-radius:5px;
+    border-radius:5px;
+}
+
+#todorefresh:hover{
+    background:rgba(0,0,0,0.9);
+    cursor:pointer;
+}
+.editmode{
+
+}
+
