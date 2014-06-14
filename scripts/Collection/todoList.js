@@ -1,20 +1,25 @@
-var TodoList = Backbone.Collection.extend({
-    model: Todo,
+define(['jQuery','backbone', 'localStorage', 'Models/todo'], function($, Backbone, LocalStorage, Todo) {
 
-    localStorage : new Backbone.LocalStorage("todostorage"),
+    var TodoList = Backbone.Collection.extend({
+        model: Todo,
 
-    doneItems: function(){
-        return this.where({done:true}); //checks all items for the 'done' property
-    },
+        localStorage : new LocalStorage("todostorage"),
 
-    remainingItems: function(){
-        return this.where({done:false});
-    },
+        doneItems: function(){
+            return this.where({done:true}); //checks all items for the 'done' property
+        },
 
-    nextOrder:function(){
-        if(!this.length) return 1;
-        return this.last().get('order') + 1;
-    },
+        remainingItems: function(){
+            return this.where({done:false});
+        },
 
-    comparator: 'order'
+        nextOrder:function(){
+            if(!this.length) return 1;
+            return this.last().get('order') + 1;
+        },
+
+        comparator: 'order'
+    });
+
+    return TodoList;
 });
