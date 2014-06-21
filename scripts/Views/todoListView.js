@@ -1,43 +1,68 @@
-define(['jQuery','backbone', 'Collection/todoList', 'Views/todoItemView'], function($, Backbone, todoList, todoView) {
+define(['jQuery','backbone', 'underscore', 'Collection/todoList', 'Views/todoItemView', 'Collection/doneList'], function($, Backbone, _,todoList, todoView, doneList) {
     var Todos = new todoList();
+    var Done = new doneList();
 
     var AppView = Backbone.View.extend({
         el: $("#todobody"),
 
+        countTemplate: _.template($('#count-template').html()),
+
         events:{
             "keypress #todoadd": "addOnEnter",
             "click #todorefresh": "resetTodo",
-            "click #tododone": "setAsDone"
+            "click #tododone": "setAsDone",
+            "click #doneundo": "setAsUndone"
         },
 
         initialize:function(){
             this.input = this.$("#todoadd");
-            this.checkboxDone = this.$("#tododone");
+            this.checkboxDone = this.$("#tododone")[0];
+            this.checkboxUndone = this.$("#doneundo")[0];
 
             this.listenTo(Todos, 'add', this.addListItem);
+            this.listenTo(Done, 'add', this.addDoneItem);
+            this.listenTo(Todos, 'remove', this.removedItem);
+            this.listenTo(Done, 'remove', this.undoneItem);
             this.listenTo(Todos,'reset', this.addListItems);
             this.listenTo(Todos, 'all', this.render);
+            this.listenTo(Done, 'all', this.render);
 
             this.footer = this.$("#todofooter");
+            this.refresh = this.$("#todorefresh");
             this.content = this.$("#todocontent");
+            this.doneContent = this.$("#donecontent");
 
             Todos.fetch();
+            Done.fetch();
         },
 
         render:function(){
-            var doneCount = Todos.doneItems().length;
+            var doneCount = Done.remainingItems().length;
             var remainingCount = Todos.remainingItems().length;
 
-            if(remainingCount > 0){
-                this.content.show();
+            if( remainingCount > 0 || doneCount > 0){
                 this.footer.show();
-                //set footer information
-            } else{
-                this.content.hide();
+                this.refresh.show();
+            }
+            else{
                 this.footer.hide();
+                this.refresh.hide();
             }
 
-            this.checkboxDone.checked = (remainingCount == 0); //set to true if all completed
+            if(remainingCount > 0)
+                this.content.show();
+            else
+                this.content.hide();
+
+            if(doneCount > 0)
+                this.doneContent.show();
+             else
+                this.doneContent.hide();
+
+            this.checkboxDone.checked = (remainingCount == 0);
+            this.checkboxUndone.checked = (doneCount == 0);
+
+            this.footer.html(this.countTemplate({ remainingCount: remainingCount ,doneCount: doneCount}));
         },
 
         addListItem:function(todo){
@@ -45,8 +70,25 @@ define(['jQuery','backbone', 'Collection/todoList', 'Views/todoItemView'], funct
              this.$("#todolist").append(view.render().el);
         },
 
+        addDoneItem:function(todo){
+             var view = new todoView({model: todo});
+             this.$("#donelist").append(view.render().el);
+        },
+
         addListItems:function(){
              Todos.each(this.addOne, this);
+        },
+
+        removedItem: function(todo){
+            if(todo.get('done')){
+                 Done.create({title: todo.get('title')});
+            }
+        },
+
+        undoneItem: function(todo){
+            if(todo.get('done')){
+                 Todos.create({title: todo.get('title')});
+            }
         },
 
         addOnEnter:function(e){
@@ -60,15 +102,32 @@ define(['jQuery','backbone', 'Collection/todoList', 'Views/todoItemView'], funct
         },
 
         resetTodo:function(){
-            _.invoke(Todos.doneItems(), 'destroy');
+            _.invoke(Todos.toArray(), 'destroy');
+            _.invoke(Done.toArray(), 'destroy');
             return false;
         },
 
         setAsDone:function(){
             var done = this.checkboxDone.checked;
-            Todos.each(function (todo){todo.save({'done': done});});
-            //send all items to done list
+            if(done){
+                var todo;
+                while (todo = Todos.first()) {
+                    todo.save({'done': done});
+                    todo.destroy();
+                }
+            }
         },
+
+        setAsUndone:function(){
+            var done = this.checkboxUndone.checked;
+            if(done){
+                var todo;
+                while (todo = Done.first()) {
+                    todo.save({'done': done});
+                    todo.destroy();
+                }
+            }
+        }
     });
 
     return AppView;

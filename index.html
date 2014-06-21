@@ -7,28 +7,45 @@
     <title>Fabiana's To Do App</title>
 </head>
 <body>
-    <div id="todobody">
-        <h1 id="todoheader">To-do List</h1>
+    <div id="todobody" class ="listbody">
+        <h1 id="todoheader" class="listheader">To-do List</h1>
         <input id="todoadd" type="text" placeholder="What do you need to get done?"/>
         <div class="todoinstruction">Press enter to add item</div>
-        <div id="todocontent">
+        <div id="todocontent" class="listcontent">
             <input type="checkbox" id="tododone" value="done"> Mark whole list as done
-            <ul id="todolist">
+            <ul id="todolist" class="itemlist">
             </ul>
             <div id="todoeditinstruction" class="todoinstruction">Double click to edit item</div>
+
         </div>
-        <div id="todofooter">Items left
+
+        <div id="donecontent" class="listcontent">
+            <h1 id="doneheader" class="listheader">Done Items</h1>
+            <input type="checkbox" id="doneundo" value="done"> Mark whole list as undone
+            <ul id="donelist" class="itemlist">
+            </ul>
+        </div>
+
+        <div id="todofooter"></div>
         <div id="todorefresh">Reset list</div>
-        </div>
     </div>
 
     <script type ="text/template" id="item-template">
         <div class="view">
-            <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
+            <input class="check" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
             <label><%- title %></label>
         </div>
         <input class="edit" type="text" value="<%- title %>" />
+    </script>
 
+    <script type="text/template" id="count-template">
+        <%if(remainingCount > 0) {%>
+        <div class="undone-items"><b><%=remainingCount%></b> <%= remainingCount== 1 ? 'item' : 'items'%> remaining</div>
+        <%}%>
+
+        <%if(doneCount > 0) {%>
+            <div class="done-items"><b><%=doneCount%></b> <%= doneCount== 1 ? 'item' : 'items'%> done</div>
+        <%}%>
     </script>
 </body>
 </html>

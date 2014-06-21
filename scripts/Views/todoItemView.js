@@ -28,6 +28,11 @@ define(['jQuery','backbone', 'underscore'], function($, Backbone, _) {
 
         toggleCheckbox : function(){
             this.model.toggle();
+
+           if(this.model.get('done')){
+                this.removeItem();
+                this.$el.addClass("done");
+            }
         },
 
         edit: function(){
@@ -40,7 +45,17 @@ define(['jQuery','backbone', 'underscore'], function($, Backbone, _) {
         },
 
         updateOnEnter: function(e){
-            if(e.keyCode == 13) endEdit();
+            if(e.keyCode == 13){
+                var value = this.input.val();
+
+                if(value.trim().length < 1){
+                    this.removeItem();
+                    return;
+                }
+
+                this.$el.removeClass("editing");
+                this.model.save({title:value});
+            }
         },
 
         endEdit:function(){

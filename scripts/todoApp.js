@@ -1,10 +1,10 @@
 require.config({
     paths: {
-        'jQuery': 'jquery',
-        'json2': 'libraries/json2',
-        'underscore': 'libraries/underscore',
-        'backbone': 'libraries/backbone',
-        'localStorage': 'libraries/backbone.localStorage'
+        'jQuery': 'bower_components/jquery/dist/jquery',
+        'json2': 'bower_components/json2/json2',
+        'underscore': 'bower_components/underscore/underscore',
+        'backbone': 'bower_components/backbone/backbone',
+        'localStorage': 'bower_components/backbone.localstorage/backbone.localStorage'
     },
     shim: {
         'jQuery': {
@@ -27,8 +27,7 @@ require.config({
     }
 });
 
-require(["Models/todo", "jQuery", "backbone", "Views/todoItemView", "Views/todoListView",
-"Collection/todoList"], function(todo, $, Backbone, todoItemView, todoListView, todoList){
-    var Todos = new todoList();
+require(["Models/todo", "jQuery", "underscore", "backbone", "Views/todoItemView", "Views/todoListView",
+"Collection/todoList", "Collection/doneList"], function(todo, $, _, Backbone, todoItemView, todoListView, todoList, doneList){
     var App = new todoListView();
 });

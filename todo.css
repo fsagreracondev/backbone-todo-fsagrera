@@ -18,7 +18,7 @@ body{
     src: url(Lobster.otf);
 }
 
-#todobody{
+.listbody{
     background:#eeeeee;
     margin:0px 0px 15px;
     padding:20px;
@@ -34,11 +34,23 @@ body{
     border-radius: 0 0 5px 5px;
 }
 
-#todoheader{
+#donebody{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius:5px;
+    border-radius:5px;
+}
+
+.listheader{
     font: 38px lobster;
     color:#000000;
     margin:10px auto;
     text-align:center;
+}
+
+#doneheader{
+    font: 30px lobster;
 }
 
 #todoadd{
@@ -65,12 +77,12 @@ body{
     display:none;
 }*/
 
-#todocontent{
+.listcontent{
     display:none;
     color:#000000;
 }
 
-#todolist{
+.itemlist{
     position:relative;
     list-style-type: none;
     padding: 10px 15px;
@@ -106,6 +118,7 @@ body{
     vertical-align:middle;
 
 }
+
 .todoremove:hover{
     opacity:1;
     cursor:pointer;
