@@ -76,7 +76,7 @@ define(['jQuery','backbone', 'underscore', 'Collection/todoList', 'Views/todoIte
         },
 
         addListItems:function(){
-             Todos.each(this.addOne, this);
+             Todos.each(this.addListItem, this);
         },
 
         removedItem: function(todo){
