@@ -22,8 +22,8 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
             this.checkboxDone = this.$("#tododone")[0];
             this.checkboxUndone = this.$("#doneundo")[0];
 
-            this.listenTo(Todos, 'add', this.addListItem);
-            this.listenTo(Done, 'add', this.addDoneItem);
+            this.listenTo(Todos, 'add', this.refreshTodo);
+            this.listenTo(Done, 'add', this.refreshDone);
             this.listenTo(Todos, 'remove', this.removedItem);
             this.listenTo(Done, 'remove', this.undoneItem);
             this.listenTo(Todos,'reset', this.addListItems);
@@ -35,7 +35,10 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
             this.content = this.$("#todocontent");
             this.doneContent = this.$("#donecontent");
 
-            Todos.fetch();
+            this.todoItemViews = [];
+            this.doneItemViews = [];
+
+            Todos.fetch(); //gets the models from localstorage
             Done.fetch();
         },
 
@@ -81,17 +84,17 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
                     remainingSuffix = "s";
                 this.footer.append(this.undoneTemplate({remainingCount: remainingCount, remainingSuffix: remainingSuffix}));
             }
-
-
         },
 
         addListItem:function(todo){
              var view = new todoView({model: todo});
+             this.todoItemViews.push(view);
              this.$("#todolist").append(view.render().el);
         },
 
         addDoneItem:function(todo){
              var view = new todoView({model: todo});
+             this.doneItemViews.push(view);
              this.$("#donelist").append(view.render().el);
         },
 
@@ -99,15 +102,19 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
              Todos.each(this.addListItem, this);
         },
 
+        addDoneItems:function(){
+            Done.each(this.addDoneItem, this);
+        },
+
         removedItem: function(todo){
             if(todo.get('done')){
-                 Done.create({title: todo.get('title'), order: Todos.nextOrder()});
+                 Done.create({title: todo.get('title')});
             }
         },
 
         undoneItem: function(todo){
             if(todo.get('done')){
-                 Todos.create({title: todo.get('title'), order: Todos.nextOrder()});
+                 Todos.create({title: todo.get('title')});
             }
         },
 
@@ -115,7 +122,7 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
             if(e.keyCode == 13){
                 if(this.input.val().trim().length < 1) return;
 
-               Todos.create({ title: this.input.val(), order: Todos.nextOrder()}); //creates the item
+               Todos.create({ title: this.input.val()}); //creates the item
 
                this.input.val('');
             }
@@ -147,6 +154,18 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
                     todo.destroy();
                 }
             }
+        },
+
+        refreshTodo:function(){
+            _.each(this.todoItemViews, function(view){view.remove();});
+            this.todoItemViews = [];
+            this.addListItems();
+        },
+
+        refreshDone:function(){
+            _.each(this.doneItemViews, function(view){view.remove();});
+            this.doneItemViews = [];
+            this.addDoneItems();
         }
     });
 
