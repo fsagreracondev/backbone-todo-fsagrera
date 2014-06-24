@@ -1,4 +1,4 @@
-define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collection/todoList', 'Views/todoItemView'], function($, Backbone, LocalStorage, _, Handlebars, todoList, todoView) {
+define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marionette', 'Collection/todoList', 'Views/todoItemView'], function($, Backbone, LocalStorage, _, Handlebars, Marionette, todoList, todoView) {
 
     var Todos = new todoList([], {storage: 'todostorage'});
     var Done =  new todoList([], {storage: 'donestorage'});
@@ -56,15 +56,9 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
                 this.refresh.hide();
             }
 
-            if(remainingCount > 0)
-                this.content.show();
-            else
-                this.content.hide();
 
-            if(doneCount > 0)
-                this.doneContent.show();
-             else
-                this.doneContent.hide();
+            this.toggleList(remainingCount, this.content);
+            this.toggleList(doneCount, this.doneContent);
 
             this.checkboxDone.checked = (remainingCount == 0);
             this.checkboxUndone.checked = (doneCount == 0);
@@ -73,6 +67,13 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collec
 
             if(doneCount > 0) this.setItemCount(doneCount, "done");
             if(remainingCount > 0) this.setItemCount(remainingCount, "remaining");
+        },
+
+        toggleList:function(count, content){
+            if(count > 0)
+                content.show();
+            else
+                content.hide();
         },
 
         setItemCount:function(count, itemType){

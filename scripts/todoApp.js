@@ -5,7 +5,8 @@ require.config({
         'underscore': '../bower_components/underscore/underscore',
         'backbone': '../bower_components/backbone/backbone',
         'localStorage': '../bower_components/backbone.localstorage/backbone.localStorage',
-        'handlebars':'../bower_components/handlebars/handlebars'
+        'handlebars':'../bower_components/handlebars/handlebars',
+        'marionette':'../bower_components/marionette/lib/backbone.marionette'
     },
     shim: {
         'jQuery': {
@@ -27,6 +28,10 @@ require.config({
         },
         'handlebars':{
             exports: 'Handlebars'
+        },
+        'marionette':{
+            deps: ['jquery', 'underscore', 'backbone'],
+            exports: 'Marionette'
         }
     }
 });
