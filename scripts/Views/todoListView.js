@@ -1,11 +1,14 @@
-define(['jQuery','backbone', 'underscore', 'Collection/todoList', 'Views/todoItemView', 'Collection/doneList'], function($, Backbone, _,todoList, todoView, doneList) {
-    var Todos = new todoList();
-    var Done = new doneList();
+define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'Collection/todoList', 'Views/todoItemView'], function($, Backbone, LocalStorage, _, Handlebars, todoList, todoView) {
+
+    var Todos = new todoList([], {storage: 'todostorage'});
+    var Done =  new todoList([], {storage: 'donestorage'});
 
     var AppView = Backbone.View.extend({
         el: $("#todobody"),
 
-        countTemplate: _.template($('#count-template').html()),
+        undoneTemplate: Handlebars.compile($('#undone-template').html()),
+
+        doneTemplate: Handlebars.compile($('#done-template').html()),
 
         events:{
             "keypress #todoadd": "addOnEnter",
@@ -62,7 +65,24 @@ define(['jQuery','backbone', 'underscore', 'Collection/todoList', 'Views/todoIte
             this.checkboxDone.checked = (remainingCount == 0);
             this.checkboxUndone.checked = (doneCount == 0);
 
-            this.footer.html(this.countTemplate({ remainingCount: remainingCount ,doneCount: doneCount}));
+            var doneSuffix = "";
+            var remainingSuffix="";
+
+            this.footer.empty();
+
+            if(doneCount > 0){
+                if (doneCount > 1)
+                    doneSuffix = "s";
+                this.footer.append(this.doneTemplate({doneCount: doneCount, doneSuffix: doneSuffix}));
+            }
+
+            if(remainingCount > 0){
+                if (remainingCount > 1)
+                    remainingSuffix = "s";
+                this.footer.append(this.undoneTemplate({remainingCount: remainingCount, remainingSuffix: remainingSuffix}));
+            }
+
+
         },
 
         addListItem:function(todo){
@@ -81,13 +101,13 @@ define(['jQuery','backbone', 'underscore', 'Collection/todoList', 'Views/todoIte
 
         removedItem: function(todo){
             if(todo.get('done')){
-                 Done.create({title: todo.get('title')});
+                 Done.create({title: todo.get('title'), order: Todos.nextOrder()});
             }
         },
 
         undoneItem: function(todo){
             if(todo.get('done')){
-                 Todos.create({title: todo.get('title')});
+                 Todos.create({title: todo.get('title'), order: Todos.nextOrder()});
             }
         },
 
@@ -95,7 +115,7 @@ define(['jQuery','backbone', 'underscore', 'Collection/todoList', 'Views/todoIte
             if(e.keyCode == 13){
                 if(this.input.val().trim().length < 1) return;
 
-               Todos.create({ title: this.input.val()}); //creates the item
+               Todos.create({ title: this.input.val(), order: Todos.nextOrder()}); //creates the item
 
                this.input.val('');
             }

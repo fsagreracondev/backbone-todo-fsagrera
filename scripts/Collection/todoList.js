@@ -3,7 +3,9 @@ define(['jQuery','backbone', 'localStorage', 'Models/todo'], function($, Backbon
     var TodoList = Backbone.Collection.extend({
         model: Todo,
 
-        localStorage : new LocalStorage("todostorage"),
+        initialize: function(models, options) {
+            this.localStorage = new LocalStorage(options.storage);
+        },
 
         doneItems: function(){
             return this.where({done:true}); //checks all items for the 'done' property
@@ -18,7 +20,7 @@ define(['jQuery','backbone', 'localStorage', 'Models/todo'], function($, Backbon
             return this.last().get('order') + 1;
         },
 
-        comparator: 'order'
+        comparator: 'title'
     });
 
     return TodoList;

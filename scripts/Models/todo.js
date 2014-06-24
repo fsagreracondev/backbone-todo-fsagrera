@@ -3,7 +3,6 @@ define(['jQuery','backbone'], function($, Backbone) {
         defaults:function(){
             return {
                 title: "empty todo item",
-                //order: Todos.nextOrder(),
                 done: false
             };
         },

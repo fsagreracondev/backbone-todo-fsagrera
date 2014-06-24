@@ -1,10 +1,11 @@
 require.config({
     paths: {
-        'jQuery': 'bower_components/jquery/dist/jquery',
-        'json2': 'bower_components/json2/json2',
-        'underscore': 'bower_components/underscore/underscore',
-        'backbone': 'bower_components/backbone/backbone',
-        'localStorage': 'bower_components/backbone.localstorage/backbone.localStorage'
+        'jQuery': '../bower_components/jquery/dist/jquery',
+        'json2': '../bower_components/json2/json2',
+        'underscore': '../bower_components/underscore/underscore',
+        'backbone': '../bower_components/backbone/backbone',
+        'localStorage': '../bower_components/backbone.localstorage/backbone.localStorage',
+        'handlebars':'../bower_components/handlebars/handlebars'
     },
     shim: {
         'jQuery': {
@@ -23,11 +24,13 @@ require.config({
         'localStorage':{
             deps: ['backbone'],
             exports:'LocalStorage'
+        },
+        'handlebars':{
+            exports: 'Handlebars'
         }
     }
 });
 
-require(["Models/todo", "jQuery", "underscore", "backbone", "Views/todoItemView", "Views/todoListView",
-"Collection/todoList", "Collection/doneList"], function(todo, $, _, Backbone, todoItemView, todoListView, todoList, doneList){
+require(["Views/todoListView"], function(todoListView){
     var App = new todoListView();
 });
