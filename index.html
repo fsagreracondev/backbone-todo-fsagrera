@@ -40,12 +40,9 @@
         <input class="edit" type="text" value="<%- title %>" />
     </script>
 
-    <script type="text/template" id="undone-template">
-        <div class="undone-items"><b>{{remainingCount}}</b> item{{remainingSuffix}} remaining</div>
+    <script type="text/template" id="itemcount-template">
+        <div class="undone-items"><b>{{count}}</b> item{{suffix}} {{itemType}}</div>
     </script>
 
-    <script type="text/template" id="done-template">
-        <div class="done-items"><b>{{doneCount}}</b> item{{doneSuffix}} done</div>
-    </script>
 </body>
 </html>
