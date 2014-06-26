@@ -1,10 +1,12 @@
-define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marionette', 'Collection/todoList', 'Views/todoItemView'], function($, Backbone, LocalStorage, _, Handlebars, Marionette, todoList, todoView) {
+define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marionette', 'Collection/todoList', 'Views/todoItemListView'],
+    function($, Backbone, LocalStorage, _, Handlebars, Marionette, todoList, TodoItemListView) {
 
     var Todos = new todoList([], {storage: 'todostorage'});
     var Done =  new todoList([], {storage: 'donestorage'});
 
     var AppView = Backbone.View.extend({
         el: $("#todobody"),
+        className:'view',
 
         itemCountTemplate: Handlebars.compile($('#itemcount-template').html()),
 
@@ -24,8 +26,6 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marion
             this.checkboxDone = this.$("#tododone")[0];
             this.checkboxUndone = this.$("#doneundo")[0];
 
-            this.listenTo(Todos, 'add', _.partial(this.refreshList, Todos, 'todoItemViews', "#todolist"));
-            this.listenTo(Done, 'add', _.partial(this.refreshList, Done, 'doneItemViews', "#donelist") );
             this.listenTo(Todos, 'remove', this.getRemoveHandler(Done));
             this.listenTo(Done, 'remove', this.getRemoveHandler(Todos));
             this.listenTo(Todos, 'all', this.render);
@@ -36,8 +36,11 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marion
             this.content = this.$("#todocontent");
             this.doneContent = this.$("#donecontent");
 
-            this.todoItemViews = [];
-            this.doneItemViews = [];
+            this.doneList = new TodoItemListView({collection: Done});
+            this.todoList = new TodoItemListView({collection: Todos});
+
+            this.doneList.render();
+            this.todoList.render();
 
             Todos.fetch(); //gets the models from localstorage
             Done.fetch();
@@ -56,6 +59,10 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marion
                 this.refresh.hide();
             }
 
+
+
+            this.$("#doneList").html(this.doneList.$el);
+            this.$("#todoList").html(this.todoList.$el);
 
             this.toggleList(remainingCount, this.content);
             this.toggleList(doneCount, this.doneContent);
@@ -84,16 +91,6 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marion
 
             this.footer.append(this.itemCountTemplate({count: count, suffix: suffix, itemType: itemType}));
          },
-
-        addListItem:function(todo, viewArray, listElement){
-             var view = new todoView({model: todo});
-             viewArray.push(view);
-             this.$(listElement).append(view.render().el);
-        },
-
-        addListItems:function(itemCollection, viewArray, element){
-             itemCollection.each(function(todo){this.addListItem(todo, viewArray, element)}, this);
-        },
 
         getRemoveHandler: function (collectionToAddTo) {
             return function(todo){
@@ -128,12 +125,6 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marion
                     todo.destroy();
                 }
             }
-        },
-
-        refreshList:function(collection, itemViewsName, element){
-            _.each(this[itemViewsName], function(view){view.remove();});
-            this[itemViewsName] = [];
-            this.addListItems(collection, this[itemViewsName], element);
         }
     });
 

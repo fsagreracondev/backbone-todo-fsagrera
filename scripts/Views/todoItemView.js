@@ -1,8 +1,8 @@
-define(['jQuery','backbone', 'underscore'], function($, Backbone, _) {
-    var TodoView = Backbone.View.extend({
+define(['jQuery', 'handlebars', 'marionette'], function($, Handlebars, Marionette) {
+    var TodoView = Marionette.ItemView.extend({
         tagName: "li",
 
-        template: _.template($('#item-template').html()),
+        template: Handlebars.compile($('#item-template').html()),
 
         events: {
             "click .check" : "toggleCheckbox",
@@ -16,14 +16,11 @@ define(['jQuery','backbone', 'underscore'], function($, Backbone, _) {
 
         initialize:function(){
             this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'destroy', this.remove);
+            window.v = this;
         },
 
-        render:function(){
-            this.$el.html(this.template(this.model.toJSON()));
-            this.$el.toggleClass('done', this.model.get('done'));
+        onRender:function(){
             this.input = this.$('.edit');
-            return this;
         },
 
         toggleCheckbox : function(){
@@ -31,7 +28,6 @@ define(['jQuery','backbone', 'underscore'], function($, Backbone, _) {
 
            if(this.model.get('done')){
                 this.removeItem();
-                this.$el.addClass("done");
             }
         },
 

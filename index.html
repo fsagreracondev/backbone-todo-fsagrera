@@ -13,8 +13,7 @@
         <div class="todoinstruction">Press enter to add item</div>
         <div id="todocontent" class="listcontent">
             <input type="checkbox" id="tododone" value="done"> Mark whole list as done
-            <ul id="todolist" class="itemlist">
-            </ul>
+            <div id="todoList"></div>
             <div id="todoeditinstruction" class="todoinstruction">Double click to edit item</div>
 
         </div>
@@ -22,8 +21,7 @@
         <div id="donecontent" class="listcontent">
             <h1 id="doneheader" class="listheader">Done Items</h1>
             <input type="checkbox" id="doneundo" value="done"> Mark whole list as undone
-            <ul id="donelist" class="itemlist">
-            </ul>
+            <div id="doneList"></div>
         </div>
 
         <div id="footer">
@@ -33,11 +31,11 @@
     </div>
 
     <script type ="text/template" id="item-template">
-        <div class="view">
-            <input class="check" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
-            <label><%- title %></label>
+        <div class="view {{#if done}} done {{/if}}">
+            <input class="check" type="checkbox" {{#if done}} checked  {{/if}} />
+            <label>{{title}}</label>
         </div>
-        <input class="edit" type="text" value="<%- title %>" />
+        <input class="edit" type="text" value="{{title}}" />
     </script>
 
     <script type="text/template" id="itemcount-template">

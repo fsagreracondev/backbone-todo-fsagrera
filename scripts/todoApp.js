@@ -28,10 +28,6 @@ require.config({
         },
         'handlebars':{
             exports: 'Handlebars'
-        },
-        'marionette':{
-            deps: ['jquery', 'underscore', 'backbone'],
-            exports: 'Marionette'
         }
     }
 });
