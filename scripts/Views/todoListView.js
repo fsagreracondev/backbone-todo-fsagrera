@@ -36,11 +36,8 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marion
             this.content = this.$("#todocontent");
             this.doneContent = this.$("#donecontent");
 
-            this.doneList = new TodoItemListView({collection: Done});
-            this.todoList = new TodoItemListView({collection: Todos});
-
-            this.doneList.render();
-            this.todoList.render();
+            this.doneListRegion = new Marionette.Region({el:'#doneList'});
+            this.todoListRegion = new Marionette.Region({el:'#todoList'});
 
             Todos.fetch(); //gets the models from localstorage
             Done.fetch();
@@ -59,10 +56,8 @@ define(['jQuery','backbone', 'localStorage', 'underscore', 'handlebars', 'marion
                 this.refresh.hide();
             }
 
-
-
-            this.$("#doneList").html(this.doneList.$el);
-            this.$("#todoList").html(this.todoList.$el);
+            this.doneListRegion.show(new TodoItemListView({collection: Done}));
+            this.todoListRegion.show(new TodoItemListView({collection: Todos}));
 
             this.toggleList(remainingCount, this.content);
             this.toggleList(doneCount, this.doneContent);
